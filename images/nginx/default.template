@@ -1,0 +1,16 @@
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+	server_name _;
+
+	location /static {
+        auth_basic off;
+	    alias /etc/nginx/static_content/static;
+	}
+
+	location / {
+	    proxy_pass http://${WSGI_HOST}:${WSGI_PORT};
+	}
+
+}

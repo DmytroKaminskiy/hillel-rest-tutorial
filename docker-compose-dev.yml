@@ -1,0 +1,15 @@
+version: "3.3"
+
+services:
+
+  backend:
+    ports:
+      - "9001:9001"  # debug
+      - "${WSGI_PORT}:${WSGI_PORT}"
+
+  postgres:
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+
+volumes:
+  db_data: {}

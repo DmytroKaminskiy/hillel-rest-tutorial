@@ -1,0 +1,60 @@
+version: "3.3"
+
+services:
+
+  backend:
+    build:
+      context: ./images/backend
+    container_name: backend
+    hostname: ${WSGI_HOST}
+    command: /bin/sh ./commands/wsgi/${SERVER}.sh
+#    command: tail -f /dev/null
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./:$PROJECT_ROOT
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    tty: true
+    stdin_open: true
+    restart: always
+    env_file: .env
+    user: ${SYSTEM_USER}
+
+  postgres:
+    image: postgres:${POSTGRES_VERSION}
+    container_name: postgres
+    hostname: ${POSTGRES_HOST}
+    env_file: .env
+    restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  nginx:
+    image: nginx:${NGINX_VERSION}
+    container_name: nginx
+    restart: always
+    env_file: .env
+    command: /bin/sh /etc/nginx/start_nginx.sh
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    volumes:
+      - ./images/nginx/proxy_params:/etc/nginx/conf.d/proxy_params
+      - ./commands/start_nginx.sh:/etc/nginx/start_nginx.sh
+      - ./images/nginx/default.template:/etc/nginx/default.template
+      - ./static_content/:/etc/nginx/static_content/
+
+  redis:
+    container_name: redis
+    image: redis:${REDIS_VERSION}
+    command: redis-server --requirepass ${REDIS_PASSWORD} --port ${REDIS_PORT}
+    restart: always
+    env_file: .env
+
+
+volumes:
+  db_data: {}

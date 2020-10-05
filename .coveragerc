@@ -1,0 +1,24 @@
+# .coveragerc to control coverage.py
+[run]
+branch = True
+omit = src/manage.py,
+       src/settings/settings*.py,
+       src/settings/wsgi*.py,
+       */migrations/*,
+       */__init__.py,
+
+       # tests
+       src/tests/*,
+       */tests*.py,
+
+[report]
+precision = 4
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    def __str__
+    if settings.DEBUG
+
+
+[html]
+directory = static_content/media/coverage

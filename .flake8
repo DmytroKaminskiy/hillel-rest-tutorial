@@ -1,0 +1,9 @@
+[flake8]
+max-line-length=120
+
+exclude=
+    migrations,
+    tmp.py,
+    wsgi*.py,
+    ./src/tests/factories/__init__.py,
+    ./src/static_content,
