@@ -1,6 +1,8 @@
 from basic import status_codes
 from basic.utils import get_client_ip
 
+from django.core.cache import cache
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -43,3 +45,28 @@ class GetMyIpView(APIView):
             return Response({'data': ip})
 
         return Response({'detail': 'Ip is not detected!'}, status=404)
+
+
+class SaveTextView(APIView):
+    CACHE_KEY = 'SaveTextView:saved-text'
+
+    def post(self, request, format=None):  # noqa
+        """
+        сохраняет текст который прислал клиент на 2 часа.
+        Пример POST запроса:
+            {"text": "hello world"}
+        """
+        text = request.data.get('text')
+        if text:
+            cache.set(self.CACHE_KEY, text, 60 * 60 * 2)  # 2 hours
+            return Response({'text': text}, status=201)
+
+        return Response({'message': 'invalid post data.'}, status=400)
+
+    def get(self, request, format=None):  # noqa
+        text = cache.get(self.CACHE_KEY)
+
+        if text:
+            return Response({'text': text})
+
+        return Response({'detail': 'text not found.'}, status=404)
