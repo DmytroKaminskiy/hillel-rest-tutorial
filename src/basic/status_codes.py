@@ -80,6 +80,6 @@ CODES = {
     },
 }
 
-STATUSES = []
-for status in CODES.values():
-    STATUSES.extend(status.keys())
+STATUSES = {}
+for value in CODES.values():
+    STATUSES.update(value)
