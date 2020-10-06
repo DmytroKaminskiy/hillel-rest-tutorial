@@ -1,4 +1,5 @@
 from basic import status_codes
+from basic.utils import get_client_ip
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -29,3 +30,16 @@ class StatusCodeInfoView(APIView):
         if status_info:
             return Response({'data': status_info})
         return Response({'detail': f'Status Code "{status_code}" not found.'}, status=404)
+
+
+class GetMyIpView(APIView):
+    def get(self, request, format=None):  # noqa
+        """
+        Возвращает IP адресс клиента
+        """
+        ip = get_client_ip(request)
+
+        if ip:
+            return Response({'data': ip})
+
+        return Response({'detail': 'Ip is not detected!'}, status=404)
