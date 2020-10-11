@@ -26,8 +26,8 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
 
-    path(f'{API_PREFIX}/basic/', include('basic.urls')),
-    path(f'{API_PREFIX}/book/', include('book.urls')),
+    path(f'{API_PREFIX}basic/', include('basic.urls')),
+    path(f'{API_PREFIX}book/', include('book.urls')),
 
     re_path(fr'^{API_PREFIX}swagger(?P<format>\.json|\.yaml)$',
             schema_view.without_ui(cache_timeout=0), name='schema-json'),
