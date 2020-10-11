@@ -10,6 +10,12 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ['SERVER'] == 'dev'
 
+TESTS_IN_PROGRESS = 'pytest' in os.path.basename(sys.argv[0]) or \
+                    'py.test' in os.path.basename(sys.argv[0]) or \
+                    'test' in sys.argv[1:] or \
+                    'jenkins' in sys.argv[1:] or \
+                    os.environ.get('CI')
+
 ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split(':')
 
 # Application definition
@@ -65,32 +71,33 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'settings.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['POSTGRES_DB'],
-        'USER': os.environ['POSTGRES_USER'],
-        'PASSWORD': os.environ['POSTGRES_PASSWORD'],
-        'HOST': os.environ['POSTGRES_HOST'],
-        'PORT': os.environ['POSTGRES_PORT'],
-    },
-}
+if not TESTS_IN_PROGRESS:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ['POSTGRES_DB'],
+            'USER': os.environ['POSTGRES_USER'],
+            'PASSWORD': os.environ['POSTGRES_PASSWORD'],
+            'HOST': os.environ['POSTGRES_HOST'],
+            'PORT': os.environ['POSTGRES_PORT'],
+        },
+    }
 
-REDIS_HOST = os.environ['REDIS_HOST']
-REDIS_PORT = os.environ['REDIS_PORT']
-REDIS_PASSWORD = os.environ['REDIS_PASSWORD']
-REDIS_CACHE_LOCATION = os.environ['REDIS_CACHE_LOCATION']
-REDIS_URI = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/"
+    REDIS_HOST = os.environ['REDIS_HOST']
+    REDIS_PORT = os.environ['REDIS_PORT']
+    REDIS_PASSWORD = os.environ['REDIS_PASSWORD']
+    REDIS_CACHE_LOCATION = os.environ['REDIS_CACHE_LOCATION']
+    REDIS_URI = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/"
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_URI + REDIS_CACHE_LOCATION,
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": REDIS_URI + REDIS_CACHE_LOCATION,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
         }
     }
-}
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
@@ -130,7 +137,7 @@ AUTH_USER_MODEL = 'account.User'
 
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.outbox'
-else:
+elif not TESTS_IN_PROGRESS:
     EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
     EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
     EMAIL_HOST = 'smtp.gmail.com'
@@ -141,14 +148,6 @@ else:
     ADMINS = (
         ('dmytro.kaminskyi92@gmail.com', 'dmytro.kaminskyi92@gmail.com'),
     )
-
-# CUSTOM SETTINGS
-#####################################################
-TESTS_IN_PROGRESS = 'pytest' in os.path.basename(sys.argv[0]) or \
-                    'py.test' in os.path.basename(sys.argv[0]) or \
-                    'test' in sys.argv[1:] or \
-                    'jenkins' in sys.argv[1:] or \
-                    os.environ.get('CI')
 
 # API
 REST_FRAMEWORK = {

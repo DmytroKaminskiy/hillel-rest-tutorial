@@ -8,7 +8,7 @@ __all__ = [
 ]
 
 
-class AuthorFactory(factory.DjangoModelFactory):
+class AuthorFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = Author
@@ -16,7 +16,7 @@ class AuthorFactory(factory.DjangoModelFactory):
     date_of_birth = factory.Faker('date_object')
 
 
-class BookFactory(factory.DjangoModelFactory):
+class BookFactory(factory.django.DjangoModelFactory):
     author = factory.SubFactory(AuthorFactory)
     title = 'Book Title'
     publish_year = 1992

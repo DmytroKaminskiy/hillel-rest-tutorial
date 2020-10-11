@@ -5,3 +5,9 @@ install:
   - pip install -r images/backend/requirements.txt
 script:
   - flake8 ./src
+  - pytest ./src/tests -s -x --cov=src --cov-report html --cov-fail-under=94
+  - pip check
+  - python src/manage.py check
+  - python src/manage.py makemigrations --check --dry-run
+  - python src/manage.py collectstatic --noinput --dry-run
+  - python src/manage.py validate_templates

@@ -71,3 +71,8 @@ DELETE
 
 
 
+
+## How to start project
+`install docker and docker-compose`
+
+`$ cp .env.example .env && docker-compose up -d`

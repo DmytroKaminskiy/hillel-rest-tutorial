@@ -1,4 +1,4 @@
-FROM python:3.8.5-slim
+FROM python:3.9.0-slim
 
 WORKDIR /home/ubuntu/projects/hillel_rest_tutorial
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
