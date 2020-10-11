@@ -14,6 +14,7 @@ server {
 	}
 
 	location / {
+	    include /etc/nginx/conf.d/proxy_params;
 	    proxy_pass http://${WSGI_HOST}:${WSGI_PORT};
 	}
 
