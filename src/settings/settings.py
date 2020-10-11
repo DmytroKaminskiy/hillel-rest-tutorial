@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     # own
     'account',
     'basic',
+    'book',
 ]
 
 MIDDLEWARE = [

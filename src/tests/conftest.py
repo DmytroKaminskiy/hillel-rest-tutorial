@@ -9,7 +9,15 @@ import pytest
 
 from pytest_django.fixtures import _django_db_fixture_helper
 
+from pytest_factoryboy import register
+
 from rest_framework.test import APIClient
+
+from tests.factories import AuthorFactory, BookFactory
+
+
+register(AuthorFactory)  # noqa
+register(BookFactory)  # noqa
 
 
 @pytest.fixture(scope='session', autouse=True)
