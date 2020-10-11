@@ -4,12 +4,7 @@ server {
 
 	server_name _;
 
-	location ~ (\.php|.aspx|.asp|myadmin) {
-        return 404;
-    }
-
 	location /static {
-        auth_basic off;
 	    alias /etc/nginx/static_content/static;
 	}
 
